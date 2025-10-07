@@ -8,9 +8,10 @@ public sealed class TestCaseResult
     /// <summary>
     /// The outcome of the test case execution.
     /// Possible values are defined by the <see cref="TestOutcome"/> enum, such as Passed, Failed, Skipped, etc.
-    /// <summary>
+    /// </summary>
     public TestOutcome Outcome { get; init; }
 
+    /// <summary>
     /// The UTC timestamp when the test case started execution. Null if not available.
     /// </summary>
     public DateTimeOffset? StartedAt { get; init; }
