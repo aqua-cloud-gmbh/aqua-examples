@@ -326,7 +326,7 @@ internal sealed class AquaClient : IAquaClient
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     private sealed class TestStepDto
     {
-        public int Index { get; set; }
+        public int Index { get; init; }
         public string? Status { get; init; }
     }
 
