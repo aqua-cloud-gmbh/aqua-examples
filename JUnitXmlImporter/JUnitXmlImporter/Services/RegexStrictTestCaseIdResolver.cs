@@ -5,7 +5,7 @@ namespace JUnitXmlImporter3.Services;
 /// <summary>
 /// Strict resolver for Test Case IDs from testcase names.
 /// Matches TC followed by exactly six digits using a strict boundary-aware pattern.
-/// Default pattern: (?&lt;![A-Z0-9])TC([0-9]{6})(?![0-9])
+/// Default pattern: <![CDATA[(?<![A-Z0-9])TC([0-9]{6})(?![0-9])]]>
 /// Returns numeric value (leading zeros allowed in the matched text), constrained to [0..999 999].
 /// </summary>
 public sealed class RegexStrictTestCaseIdResolver(string? pattern = null) : ITestCaseIdResolver
