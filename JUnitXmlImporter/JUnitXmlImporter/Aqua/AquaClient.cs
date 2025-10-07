@@ -274,7 +274,7 @@ internal sealed class AquaClient : IAquaClient
         try
         {
             var s = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            if (s.Length > 500) s = s.Substring(0, 500) + "...";
+            if (s.Length > 500) s = s[..500] + "...";
             return s;
         }
         catch
