@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ExampleSuite" tests="4" failures="1" errors="1" skipped="1" time="0.345" timestamp="2025-08-20T12:34:56Z">
+  <testcase classname="WebTests.LoginTests" name="Should login [TC:123]" time="0.123" />
+  <testcase classname="ApiTests.Health" name="Health check TC-42" time="0.045">
+    <failure message="Assertion failed"><![CDATA[Expected 200 OK but was 500 Internal Server Error
+at ApiTests.Health.Check() in Health.cs:line 42]]></failure>
+  </testcase>
+  <testcase classname="CalcTests.Divide" name="Divide by zero [TC:777]" time="0.001">
+    <error message="System.DivideByZeroException: Attempted to divide by zero." />
+  </testcase>
+  <testcase classname="FeatureX.Skips" name="Skipped case TC 999" time="0.000">
+    <skipped message="Flaky test quarantine" />
+  </testcase>
+</testsuite>
