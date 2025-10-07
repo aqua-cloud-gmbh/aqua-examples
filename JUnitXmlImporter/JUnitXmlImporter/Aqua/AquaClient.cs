@@ -17,7 +17,7 @@ internal sealed class AquaClient : IAquaClient
     private readonly HttpOptions _http;
     private readonly ILogger<AquaClient> _logger;
 
-    private volatile string? _bearerToken;
+    private string? _bearerToken;
 
     public AquaClient(AquaOptions aqua, HttpOptions? http, ILogger<AquaClient> logger, IHttpClientFactory httpClientFactory)
     {
