@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="JUnitPlatformSuite" tests="3" failures="1" errors="0" skipped="1" time="0.250" timestamp="2025-08-21T09:00:00Z">
+  <!-- Passed parameterized -->
+  <testcase classname="com.example.ParamTests" name="shouldWork(String)[1] - input=foo" time="0.100" />
+  <!-- Failed parameterized with CDATA details -->
+  <testcase classname="com.example.ParamTests" name="shouldWork(String)[2] - input=bar" time="0.050">
+    <failure message="expected:&lt;42&gt; but was:&lt;41&gt;"><![CDATA[java.lang.AssertionError: expected:<42> but was:<41>
+	at com.example.ParamTests.shouldWork(ParamTests.java:27)]]></failure>
+  </testcase>
+  <!-- Skipped with message attribute only (typical for JUnit 5) -->
+  <testcase classname="com.example.SkippedTests" name="shouldBeSkipped()" time="0.000">
+    <skipped message="@Disabled reason" />
+  </testcase>
+</testsuite>
