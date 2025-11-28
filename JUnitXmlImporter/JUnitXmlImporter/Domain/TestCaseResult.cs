@@ -22,4 +22,9 @@ public sealed class TestCaseResult
     public DateTimeOffset? FinishedAt { get; init; }
     public string? ErrorMessage { get; init; }
     public string? ErrorDetails { get; init; }
+    
+    /// <summary>
+    /// The test case ID extracted from the case_id property in the JUnit XML. Null if not present.
+    /// </summary>
+    public int? CaseId { get; init; }
 }
