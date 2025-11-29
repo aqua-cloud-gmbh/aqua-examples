@@ -42,7 +42,8 @@ jobs:
       
       - name: Create artifact
         run: |
-          tar -czf JUnitXmlImporter.tar.gz -C JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0 .
+          cd JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0
+          tar -czf ../../../../../JUnitXmlImporter.tar.gz .
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
