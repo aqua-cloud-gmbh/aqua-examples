@@ -42,6 +42,7 @@ jobs:
       
       - name: Create artifact
         run: |
+          pwd `
           Compress-Archive -Path JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0/* -DestinationPath JUnitXmlImporter.zip
       
       - name: Upload artifact
