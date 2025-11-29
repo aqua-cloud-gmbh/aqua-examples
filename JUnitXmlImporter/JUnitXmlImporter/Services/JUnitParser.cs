@@ -11,7 +11,7 @@ namespace JUnitXmlImporter3.Services;
 /// </summary>
 public sealed class JUnitParser : IJUnitParser
 {
-    private const string TestCaseIdentifier = "case_id";
+    private const string CaseIdPropertyName = "case_id";
 
     public async Task<IReadOnlyList<TestCaseResult>> ParseAsync(string path, CancellationToken cancellationToken)
     {
@@ -219,7 +219,7 @@ public sealed class JUnitParser : IJUnitParser
             {
                 var name = reader.GetAttribute("name");
                 var value = reader.GetAttribute("value");
-                if (name == TestCaseIdentifier && !string.IsNullOrWhiteSpace(value))
+                if (name == CaseIdPropertyName && !string.IsNullOrWhiteSpace(value))
                 {
                     if (int.TryParse(value, out var id))
                         return id;
