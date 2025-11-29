@@ -1,0 +1,88 @@
+name: .NET Core Build and Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./JUnitXmlImporter
+      
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: ./JUnitXmlImporter
+      
+      - name: Test
+        run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
+        working-directory: ./JUnitXmlImporter
+      
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Test Results
+          path: '**/test-results.trx'
+          reporter: dotnet-trx
+      
+      - name: Create artifact
+        run: |
+          Compress-Archive -Path JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0/* -DestinationPath JUnitXmlImporter.zip
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JUnitXmlImporter
+          path: JUnitXmlImporter.zip
+
+  lint:
+    name: Lint the code
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      
+      - name: Create tool manifest
+        run: dotnet new tool-manifest
+        working-directory: ./JUnitXmlImporter
+      
+      - name: Install ReSharper
+        run: dotnet tool install JetBrains.ReSharper.GlobalTools
+        working-directory: ./JUnitXmlImporter
+      
+      - name: Restore tools
+        run: dotnet tool restore
+        working-directory: ./JUnitXmlImporter
+      
+      - name: Run ReSharper inspection
+        run: |
+          $env:REPORTS_PATH = "linter-reports"
+          New-Item -ItemType Directory -Force -Path $env:REPORTS_PATH
+          dotnet jb inspectcode JUnitXmlImporter.sln --output="$env:REPORTS_PATH/jb-$env:GITHUB_RUN_NUMBER.json"
+        working-directory: ./JUnitXmlImporter
+      
+      - name: Upload linter reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: linter-reports
+          path: JUnitXmlImporter/linter-reports/**
