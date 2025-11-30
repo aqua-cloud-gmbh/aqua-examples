@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-test:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     steps:
       - uses: actions/checkout@v4
@@ -42,17 +42,17 @@ jobs:
       
       - name: Create artifact
         run: |
-          tar -czf JUnitXmlImporter.tar.gz -C JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0 .
+          Compress-Archive -Path JUnitXmlImporter/JUnitXmlImporter/bin/*/Release/net9.0/* -DestinationPath JUnitXmlImporter.zip
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: JUnitXmlImporter
-          path: JUnitXmlImporter.tar.gz
+          path: JUnitXmlImporter.zip
 
   lint:
     name: Lint the code
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     steps:
       - uses: actions/checkout@v4
@@ -76,8 +76,9 @@ jobs:
       
       - name: Run ReSharper inspection
         run: |
-          mkdir -p linter-reports
-          dotnet jb inspectcode JUnitXmlImporter.sln --output="linter-reports/jb-$GITHUB_RUN_NUMBER.json"
+          $env:REPORTS_PATH = "linter-reports"
+          New-Item -ItemType Directory -Force -Path $env:REPORTS_PATH
+          dotnet jb inspectcode JUnitXmlImporter.sln --output="$env:REPORTS_PATH/jb-$env:GITHUB_RUN_NUMBER.json"
         working-directory: ./JUnitXmlImporter
       
       - name: Upload linter reports
