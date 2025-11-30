@@ -40,15 +40,11 @@ jobs:
           path: '**/test-results.trx'
           reporter: dotnet-trx
       
-      - name: Create artifact
-        run: |
-          Compress-Archive -Path JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0/* -DestinationPath JUnitXmlImporter.zip
-      
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: JUnitXmlImporter
-          path: JUnitXmlImporter.zip
+          path: JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0/*
 
   lint:
     name: Lint the code
