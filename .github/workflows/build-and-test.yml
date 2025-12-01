@@ -24,8 +24,8 @@ jobs:
         run: dotnet restore
         working-directory: ./JUnitXmlImporter
       
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
+      - name: Publish
+        run: dotnet publish -c Release -r linux-x64 --self-contained
         working-directory: ./JUnitXmlImporter
       
       - name: Test
@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: JUnitXmlImporter
-          path: JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0/*
+          path: JUnitXmlImporter/JUnitXmlImporter/bin/Release/net9.0/linux-x64/publish
 
   lint:
     name: Lint the code
