@@ -11,6 +11,8 @@ namespace JUnitXmlImporter3.Services;
 /// </summary>
 public sealed class JUnitParser : IJUnitParser
 {
+    private const string CaseIdPropertyName = "case_id";
+
     public async Task<IReadOnlyList<TestCaseResult>> ParseAsync(string path, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(path);
@@ -71,6 +73,7 @@ public sealed class JUnitParser : IJUnitParser
         TestOutcome outcome = TestOutcome.Passed;
         string? errMsg = null;
         string? errDetails = null;
+        int? caseId = null;
         bool isEmptyElement = reader.IsEmptyElement;
 
         if (!isEmptyElement)
@@ -101,6 +104,9 @@ public sealed class JUnitParser : IJUnitParser
                             outcome = TestOutcome.Skipped;
                             // Some junit-platform places a message attr on skipped
                             (errMsg, errDetails) = await ReadIssueNodeAsync(reader, cancellationToken, readInner:false);
+                            break;
+                        case "properties":
+                            caseId = await ReadPropertiesForCaseIdAsync(reader, cancellationToken);
                             break;
                         default:
                             // skip others like system-out/system-err
@@ -138,7 +144,8 @@ public sealed class JUnitParser : IJUnitParser
             ErrorMessage = errMsg,
             ErrorDetails = errDetails,
             StartedAt = startedAt,
-            FinishedAt = finishedAt
+            FinishedAt = finishedAt,
+            CaseId = caseId
         };
     }
 
@@ -193,6 +200,32 @@ public sealed class JUnitParser : IJUnitParser
             return dto;
         if (DateTimeOffset.TryParse(raw, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out dto))
             return dto;
+        return null;
+    }
+
+    private static async Task<int?> ReadPropertiesForCaseIdAsync(XmlReader reader, CancellationToken cancellationToken)
+    {
+        if (reader.IsEmptyElement)
+            return null;
+
+        var depth = reader.Depth;
+        while (await reader.ReadAsync())
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (reader.NodeType == XmlNodeType.EndElement && reader.Depth == depth)
+                break;
+
+            if (reader.NodeType == XmlNodeType.Element && reader.Name == "property")
+            {
+                var name = reader.GetAttribute("name");
+                var value = reader.GetAttribute("value");
+                if (name == CaseIdPropertyName && !string.IsNullOrWhiteSpace(value))
+                {
+                    if (int.TryParse(value, out var id))
+                        return id;
+                }
+            }
+        }
         return null;
     }
 }

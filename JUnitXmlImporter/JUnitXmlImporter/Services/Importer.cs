@@ -199,7 +199,7 @@ public sealed class Importer(
         var nameContext = r.Name;
         var altContext = string.IsNullOrWhiteSpace(r.ClassName) ? r.Name : $"{r.ClassName}.{r.Name}";
         var scenarioId = _scenarioResolver.ResolveId(nameContext) ?? _scenarioResolver.ResolveId(altContext);
-        var caseId = _idResolver.ResolveId(nameContext) ?? _idResolver.ResolveId(altContext);
+        var caseId = r.CaseId ?? _idResolver.ResolveId(nameContext) ?? _idResolver.ResolveId(altContext);
 
         if (scenarioId is null || scenarioId < 0 || caseId is null || caseId <= 0)
         {
